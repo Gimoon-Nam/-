@@ -1,20 +1,812 @@
-﻿// 20200804남기문 방탈출. 개인과제.cpp : 이 파일에는 'main' 함수가 포함됩니다. 거기서 프로그램 실행이 시작되고 종료됩니다.
-//
+﻿#include <stdio.h>
+#include <bangtal.h>
+SceneID start, mainhall, s1_right, s1_left, s2_left, s2_right, s2_right_chess;
+ObjectID
+//start
+start_game, end_game,
+//main stage
+main_door_left, main_door_right, main_rd_2, main_record, main_book, main_fire, record_red, record_yellow, record_green, battery_record, key_s1l, key_s2r, key_s3l,
+//stage1 right
+s1r_door, s1r_picture, s1r_picture_changed, s1r_mirror, s1r_candle, s1r_bone, s1r_drawer, s1r_clock, s1r_drawer2, s1r_book, s1r_paper1, s1r_paper2, s1r_paper3,
+//stage1 left
+s1l_door, s1l_sinkdrawer, s1l_play1, s1l_play2, s1l_play3, s1l_play4, s1l_play5, s1l_play8,
+//stage2 left
+s2l_door, s2l_clock, s2l_drawer, s2l_picture1, s2l_picture2, s2l_picture3, s2l_picture4, s2l_picture5, s2l_book, s2l_bookcase, s2l_board,
+//stage2 right
+s2r_door, s2r_book_RU, s2r_book_RD, s2r_book_LU, s2r_book_LD, s2r_drawer, s2r_paper, s2r_clock, s2r_chess,
+//stage2 right_chess
+s2r_chess_door, chess_queen1, chess_queen2, chess_queen3, chess_queen4, chess_queen5, chess_queen6, chess_queen7, chess_queen8
+;
+SoundID start_BGM, stage1_BGM, stage2_BGM, chess_BGM, stage3_BGM,
+s1l_1, s1l_2, s1l_3, s1l_4, s1l_5, s1l_8;
 
-#include <iostream>
+bool record = false, door_s1_left = true, door_s2_right = true, door_s3_left = true,
+s1_right_light = true, p_s1_right_drawer1 = true, p_s1_right_drawer2 = true,
+p_s1_left_sink = true,
+p_s2_left_drawer1 = true,
+p_s2_right_drawer1=true
+;
+int
+queen1X = 505, queen1Y = 350,
+queen2X = 487, queen2Y = 329,
+queen3X = 471, queen3Y = 308,
+queen4X = 453, queen4Y = 283,
+queen5X = 426, queen5Y = 258,
+queen6X = 400, queen6Y = 233,
+queen7X = 374, queen7Y = 208,
+queen8X = 348, queen8Y = 183;
 
-int main()
-{
-    std::cout << "Hello World!\n";
+ObjectID createObject(const char* image, SceneID scene, int x, int y, bool shown) {
+	ObjectID object = createObject(image);
+	locateObject(object, scene, x, y);
+	if (shown == true) {
+		showObject(object);
+	}
+	return object;
 }
 
-// 프로그램 실행: <Ctrl+F5> 또는 [디버그] > [디버깅하지 않고 시작] 메뉴
-// 프로그램 디버그: <F5> 키 또는 [디버그] > [디버깅 시작] 메뉴
+void game_start() {
+	//메인화면
+	start = createScene("Main Screen", "main.png");
 
-// 시작을 위한 팁: 
-//   1. [솔루션 탐색기] 창을 사용하여 파일을 추가/관리합니다.
-//   2. [팀 탐색기] 창을 사용하여 소스 제어에 연결합니다.
-//   3. [출력] 창을 사용하여 빌드 출력 및 기타 메시지를 확인합니다.
-//   4. [오류 목록] 창을 사용하여 오류를 봅니다.
-//   5. [프로젝트] > [새 항목 추가]로 이동하여 새 코드 파일을 만들거나, [프로젝트] > [기존 항목 추가]로 이동하여 기존 코드 파일을 프로젝트에 추가합니다.
-//   6. 나중에 이 프로젝트를 다시 열려면 [파일] > [열기] > [프로젝트]로 이동하고 .sln 파일을 선택합니다.
+	//메인홀
+	mainhall = createScene("mainhall", "stage all_main_1.png");
+	s1_right = createScene("", "stage1_right_1.png");
+	s1_left = createScene("", "stage1_left_1.png");
+	//stage2
+	s2_left = createScene("", "stage2_left_2.png");
+	s2_right = createScene("", "stage2_right_1.png");
+	s2_right_chess = createScene("", "s2_right_chess.png");
+}
+
+void object_create() {
+	//start
+	start_game = createObject("start.png", start, 590, 70, true);
+	end_game = createObject("end.png", start, 590, 20, true);
+
+	//main hall
+	main_door_left = createObject("main_ld_117,501.png", mainhall, 117, 218, true);
+	main_door_right = createObject("main_rd_936,460.png", mainhall, 936, 260, true);
+	main_rd_2 = createObject("main_rd_2.png", mainhall, 936, 259, true);
+	main_record = createObject("main_record_316,549.png", mainhall, 316, 170, true);
+	main_book = createObject("main_book_1002,577.png", mainhall, 1002, 142, true);
+	main_fire = createObject("main_fire_691,483.png", mainhall, 691, 236, true);
+	record_red = createObject("record_red.png", s1_right, 0, 0, false);
+	record_yellow = createObject("record_yellow.png", s1_right, 185, 117, false);
+	record_green = createObject("record_green.png", s1_right, 0, 0, false);
+	battery_record = createObject("battery_record.png", s1_right, 0, 0, false);
+	key_s1l = createObject("key.png", s1_right, 0, 0, false);
+	key_s2r = createObject("key.png", s1_right, 0, 0, false);
+	key_s3l = createObject("key.png", s1_right, 0, 0, false);
+
+	//s1_right
+	s1r_door = createObject("s1_right_door_982,435.png", s1_right, 982, 284, true);
+	s1r_picture = createObject("s1_right_picture_390,334.png", s1_right, 390, 385, true);
+	s1r_picture_changed = createObject("s1_right_picture_rasputin_390,334.png", s1_right, 390, 385, false);//대사: 1년을 월별로 구분하지말고 하나의 큰 줄기로 바라보고 계획을 짜.
+	s1r_mirror = createObject("s1_right_mirror_78,441.png", s1_right, 78, 278, true);
+	s1r_candle = createObject("s1_right_candle_383,518.png", s1_right, 383, 201, true);//불끄도록
+	s1r_bone = createObject("s1_right_bone_26,677.png", s1_right, 26, 42, true);//상호대사
+	s1r_drawer = createObject("s1_right_drawer_185,602.png", s1_right, 185, 117, true);//잠겨있음-미니게임으로 열기
+	s1r_clock = createObject("s1_right_clock_222,326.png", s1_right, 222, 393, true);//미니게임
+	s1r_drawer2 = createObject("s1_right_drawer2_1090,685.png", s1_right, 1090, 34, true);//잠겨있음-비밀번호
+	s1r_book = createObject("s1_right_book_515,525.png", s1_right, 515, 194, true);//
+	s1r_paper1 = createObject("s1_right_paper1_593,659.png", s1_right, 593, 60, true);//종이1~3은 퀴즈-비번유추
+	s1r_paper2 = createObject("s1_right_paper2_900,706.png", s1_right, 900, 13, true);
+	s1r_paper3 = createObject("s1_right_paper3_1008,711.png", s1_right, 1008, 8, true);
+	
+	//s1_left
+	s1l_door = createObject("s1_left_door_0,647.png", s1_left, 0, 72, true);
+	s1l_sinkdrawer = createObject("s1_left_sinkdrawer_581,559.png", s1_left, 581, 160, true);
+	s1l_play1 = createObject("s1_left_play1_1026,137.png", s1_left, 1026, 582, true);
+	s1l_play2 = createObject("s1_left_play2_1099,509.png", s1_left, 1099, 210, true);
+	s1l_play3 = createObject("s1_left_play3_232,455.png", s1_left, 232, 264, true);
+	s1l_play4 = createObject("s1_left_play4_648,287.png", s1_left, 648, 432, true);
+	s1l_play5 = createObject("s1_left_play5_1018,321.png", s1_left, 1018, 398, true);
+	s1l_play8 = createObject("s1_left_play8_836,359.png", s1_left, 836, 360, true);
+
+	//s2_left
+	s2l_door = createObject("door_back.png", s2_left, 590, 20, true);
+	scaleObject(s2l_door, 0.8f);
+	s2l_clock = createObject("s2_left_clock_415,420.png", s2_left, 415, 299, true);
+	s2l_drawer = createObject("s2_left_drawer_1052,510.png", s2_left, 1052, 209, true);
+	s2l_picture1 = createObject("s2_left_picture1_666,395.png", s2_left, 666, 324, true);
+	s2l_picture2 = createObject("s2_left_picture2_749,393.png", s2_left, 749, 326, true);
+	s2l_picture3 = createObject("s2_left_picture3_826,387.png", s2_left, 826, 332, true);
+	s2l_picture4 = createObject("s2_left_picture4_754,283.png", s2_left, 754, 436, true);
+	s2l_picture5 = createObject("s2_left_picture5_160,289.png", s2_left, 160, 430, true);
+	s2l_book = createObject("s2_left_book_721,665.png", s2_left, 721, 54, true);
+	s2l_bookcase = createObject("s2_left_bookcase_1052,333.png", s2_left, 1052, 386, true);
+	s2l_board = createObject("s2_left_board_174,497.png", s2_left, 174, 222, true);
+
+	//s2_right
+	s2r_door = createObject("door_back.png", s2_right, 590, 20, true);
+	scaleObject(s2r_door, 0.8f);
+	s2r_book_RU = createObject("s2_right_book_RU_227,250.png", s2_right, 227, 469, true);
+	s2r_book_RD = createObject("s2_right_book_RD_233,374.png", s2_right, 233, 345, true);
+	s2r_book_LU = createObject("s2_right_book_LU_14,207.png", s2_right, 14, 512, true);
+	s2r_book_LD = createObject("s2_right_book_LD_15,414.png", s2_right, 15, 305, true);
+	s2r_drawer = createObject("s2_right_drawer_909,556.png", s2_right, 909, 163, true);
+	s2r_paper = createObject("s2_right_paper_616,429.png", s2_right, 616, 290, true);
+	s2r_clock = createObject("s2_right_clock_1015,371.png", s2_right, 1015, 348, true);
+	s2r_chess = createObject("s2r_chess.png", s2_right, 215, 40, true);
+
+	//s2_right_chess
+	s2r_chess_door = createObject("door_back.png", s2_right_chess, 590, 20, true);
+	scaleObject(s2r_chess_door, 0.8f);
+	chess_queen1 = createObject("chess_queen.png", s2_right_chess, queen1X, queen1Y, true);
+	chess_queen2 = createObject("chess_queen.png", s2_right_chess, queen2X, queen2Y, true);
+	chess_queen3 = createObject("chess_queen.png", s2_right_chess, queen3X, queen3Y, true);
+	chess_queen4 = createObject("chess_queen.png", s2_right_chess, queen4X, queen4Y, true);
+	chess_queen5 = createObject("chess_queen.png", s2_right_chess, queen5X, queen5Y, true);
+	chess_queen6 = createObject("chess_queen.png", s2_right_chess, queen6X, queen6Y, true);
+	chess_queen7 = createObject("chess_queen.png", s2_right_chess, queen7X, queen7Y, true);
+	chess_queen8 = createObject("chess_queen.png", s2_right_chess, queen8X, queen8Y, true);
+
+}
+/*
+227,250 책 우상단 오만과 편견
+233,374 책 우하단 위대한 개츠비
+14,207 책 좌상단
+15,414 책 좌하단
+909,556 금고
+616,429 종이
+1015,371 시계
+
+*/
+void sound_create() {
+	start_BGM = createSound("Intro.wav");
+//s1_main
+	stage1_BGM = createSound("BGM.mp3");
+
+//s1_left
+	s1l_1 = createSound("1.mp3");
+	s1l_2 = createSound("2.wav");
+	s1l_3 = createSound("3.mp3");
+	s1l_4 = createSound("4.mp3");
+	s1l_5 = createSound("5.mp3");
+	s1l_8 = createSound("8.mp3");
+
+//s2_main
+	stage2_BGM = createSound("stage2_BGM.mp3");
+//s2_chess
+	chess_BGM = createSound("chess_BGM.mp3");
+//s3_main
+	stage3_BGM = createSound("stage3_BGM.mp3");
+}
+
+int a = 0, b = 1, c = 1, s1r1 = 0, s1r2 = 0, s1l1 = 0, s2l1 = 0, s2r1 = 0, s2r2 = 0;
+
+void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
+
+	//start
+	if (object == end_game) {
+		endGame();
+	}
+	else if (object == start_game) {
+		stopSound(start_BGM);
+		enterScene(mainhall);
+		playSound(stage1_BGM, true);
+	}
+	//main hall
+	else if (object == main_door_right) {
+		if (b == 1) {
+			enterScene(s1_right);
+		}
+		else if (b == 2) {
+			if (door_s2_right == true) {
+				if (getHandObject() == key_s2r) {
+					showMessage("문이 열렸다");
+					door_s2_right = false;
+					dropObject(key_s2r);
+					hideObject(key_s2r);
+				}
+				else {
+					showMessage("문이 잠겨있다");
+				}
+			}
+			else {
+				enterScene(s2_right);
+			}
+		}
+		else if (b == 3) {
+			//enterScene(s3_right);
+		}
+	}
+	else if (object == main_door_left) {
+		if (b == 1) {
+			if (door_s1_left == true) {
+				if (getHandObject() == key_s1l) {
+					showMessage("문이 열렸다");
+					door_s1_left = false;
+					dropObject(key_s1l);
+					hideObject(key_s1l);
+				}
+				else {
+					showMessage("문이 잠겨있다");
+				}
+			}
+			else {
+				enterScene(s1_left);
+			}
+		}
+		else if (b == 2) {
+			enterScene(s2_left);
+		}
+		else if (b == 3) {
+			if (door_s3_left == true) {
+				if (getHandObject() == key_s3l) {
+					showMessage("문이 열렸다");
+					door_s3_left = false;
+					dropObject(key_s3l);
+					hideObject(key_s3l);
+				}
+				else {
+					showMessage("문이 잠겨있다");
+				}
+			}
+			else {
+				//enterScene(s3_left);
+			}
+		}
+	}
+	else if (object == main_book) {
+		showMessage("초청, 보석, 파티, 죽음"); //1425
+	}
+	else if (object == main_record) {
+		if (getHandObject() == battery_record) {
+			record = true;
+			showMessage("레코드판을 작동시켰다.");
+			dropObject(battery_record);
+			hideObject(battery_record);
+		}
+		if (record == true) {
+			if (b == 1) {
+				if (getHandObject() == record_yellow) {
+					dropObject(record_yellow);
+					hideObject(record_yellow);
+					pickObject(record_red);
+					stopSound(stage1_BGM);
+					playSound(stage2_BGM, true);
+					b = 2;
+				}
+				else if (getHandObject() == record_green) {
+					dropObject(record_green);
+					hideObject(record_green);
+					pickObject(record_red);
+					stopSound(stage1_BGM);
+					playSound(stage3_BGM, true);
+					b = 3;
+				}
+				else {
+					showMessage("교체할 레코드판을 손에 들고있지 않다.");
+				}
+			}
+			else if (b == 2) {
+				if (getHandObject() == record_red) {
+					dropObject(record_red);
+					hideObject(record_red);
+					pickObject(record_yellow);
+					stopSound(stage2_BGM);
+					playSound(stage1_BGM, true);
+					b = 1;
+				}
+				else if (getHandObject() == record_green) {
+					dropObject(record_green);
+					hideObject(record_green);
+					pickObject(record_yellow);
+					stopSound(stage2_BGM);
+					playSound(stage3_BGM, true);
+					b = 3;
+				}
+				else {
+					showMessage("교체할 레코드판을 손에 들고있지 않다.");
+				}
+			}
+			else if (b == 3) {
+				if (getHandObject() == record_red) {
+					dropObject(record_red);
+					hideObject(record_red);
+					pickObject(record_green);
+					stopSound(stage3_BGM);
+					playSound(stage1_BGM, true);
+					b = 1;
+				}
+				else if (getHandObject() == record_yellow) {
+					dropObject(record_yellow);
+					hideObject(record_yellow);
+					pickObject(record_green);
+					stopSound(stage3_BGM);
+					playSound(stage2_BGM, true);
+					b = 2;
+				}
+				else {
+					showMessage("교체할 레코드판을 손에 들고있지 않다.");
+				}
+			}
+		}
+		else {
+			showMessage("레코드판이 동작하지 않는것 같다");
+		}
+	}
+	//s1_right
+	else if (object == s1r_door) {
+		enterScene(mainhall);
+	}
+	else if (object == s1r_candle) {
+		s1_right_light = !s1_right_light;
+		if (s1_right_light == true) {
+			setSceneLight(s1_right, 1.0f);
+			hideObject(s1r_picture_changed);
+			showObject(s1r_picture);
+		}
+		else {
+			setSceneLight(s1_right, 0.2f);
+			hideObject(s1r_picture);
+			showObject(s1r_picture_changed);
+		}
+	}
+	else if (object == s1r_picture_changed) {
+		if (s1_right_light == false) {
+			showMessage("1년을 하나의 큰 줄기로 바라봐. \n꼭 기억해. 언젠간 널 도와줄지도 모르니.");
+		}
+	}
+	else if (object == s1r_picture) {
+		if (s1_right_light == true) {
+			showMessage("나를 뚫어져라 쳐다보는 것 같다");
+		}
+	}
+	else if (object == s1r_mirror) {
+		if (s1_right_light == true) {
+			showMessage("continuity  특수한 펜으로 적은 것 같다");
+		}
+		else {
+			showMessage("_ont_nu_t_ 일부가 잘 보이지 않는다. 특수한 펜으로 적은 것 같다");
+		}
+	}
+	else if (object == s1r_drawer) {
+		if (p_s1_right_drawer1 == true) {
+			showKeypad("ciiy", s1r_drawer);
+		}
+		else if (s1r2 == 1) {
+			showMessage("방 열쇠가 있던자리. 서랍 안엔 아무것도 없다.");
+		}
+		else {
+			showMessage("방 열쇠를 얻었다");
+			pickObject(key_s1l);
+			s1r2 = 1;
+		}
+	}
+	else if (object == s1r_drawer2) {
+		if (p_s1_right_drawer2 == true) {
+			showKeypad("1425", s1r_drawer2);
+		}
+		else if (s1r1 == 1) {
+			showMessage("노란색 레코드판이 있던 자리. 서랍장 안에는 아무것도 없다.");
+		}
+		else {
+			showMessage("노란색 레코드판을 얻었다");
+			pickObject(record_yellow);
+			s1r1 = 1;
+		}
+	}
+	else if (object == s1r_paper1) {
+		showMessage("첫째날 밤, 그는 우리를 외딴산장에 초대했다. \n 둘째날 밤, 그는 우리를 위해 파티를 열었다.");
+	}
+	else if (object == s1r_paper2) {
+		showMessage("셋째날 밤, 그는 우리에게 선물을 주었다. \n 넷째날 밤, 우리의 보석이 사라졌다.");
+	}
+	else if (object == s1r_paper3) {
+		showMessage("다섯째날 밤, 우리 중 한명이 죽었다. \n 여섯째날 밤, 그곳엔 아무도 없었다.");
+	}
+	else if (object == s1r_book) {
+		showMessage("빨간색은 위대한색, 노란색은 오만함의색, 파란색은 우울함의 색");
+	}
+	else if (object == s1r_bone) {
+		showMessage("슬픔은 오만과 우울의 사이에 있으니..");
+	}
+	//s1_left
+	else if (object == s1l_door) {
+		enterScene(mainhall);
+	}
+	else if (object == s1l_sinkdrawer) {
+		if (p_s1_left_sink == true) {
+			showMessage("주방의 소리를 듣고 1,2,3,4,5,8을 1,3,5,8의 순서로 눌러라");
+		}
+		else if (s1l1 == 1) {
+			showMessage("건전지가 있던 자리. 안엔 아무것도 없다.");
+		}
+		else {
+			showMessage("안에 건전지가 있다.");
+			pickObject(battery_record);
+			s1l1 = 1;
+			return;
+		}
+	}
+	else if (object == s1l_play1) {
+		playSound(s1l_1, false);
+		if (a == 0) {
+			a += 1;
+		}
+		else if (a == 4) {
+
+		}
+		else {
+			a = 0;
+		}
+	}
+	else if (object == s1l_play2) {
+		playSound(s1l_2);
+		if (a == 4) {
+
+		}
+		else {
+			a = 0;
+		}
+		return;
+	}
+	else if (object == s1l_play3) {
+		playSound(s1l_3);
+		if (a == 1) {
+			a += 1;
+		}
+		else if (a == 4) {
+
+		}
+		else {
+			a = 0;
+		}
+	}
+	else if (object == s1l_play4) {
+		playSound(s1l_4);
+		if (a == 4) {
+
+		}
+		else {
+			a = 0;
+		}
+	}
+	else if (object == s1l_play5) {
+		playSound(s1l_5);
+		if (a == 2) {
+			a += 1;
+		}
+		else if (a == 4) {
+
+		}
+		else {
+			a = 0;
+		}
+	}
+	else if (object == s1l_play8) {
+		playSound(s1l_8);
+		if (a == 3) {
+			a += 1;
+			//playSound
+			showMessage("무언가 열리는 소리가 들렸다");
+			p_s1_left_sink = false;
+		}
+		else if (a == 4) {
+		}
+		else {
+			a = 0;
+		}
+	}
+	//s2_left
+	if (object == s2l_door) {
+		enterScene(mainhall);
+	}
+	else if (object == s2l_board) {
+		showMessage("의미없는 계획은 없다. 모든일에 의미를 부여하자. \n그 날짜까지에도.");
+	}
+	else if (object == s2l_picture1) {
+		showImageViewer("eight_queens_hint.png");
+		showMessage("8개의 퀸이 서로 공격할수 없도록 위치하게 할 수 있을까?");
+	}
+	else if (object == s2l_picture2) {
+		showImageViewer("cal_23.png");
+	}
+	else if (object == s2l_picture3) {
+		showImageViewer("cal_45.png");
+	}
+	else if (object == s2l_picture4) {
+		showImageViewer("cal_67.png");
+	}
+	else if (object == s2l_picture5) {
+		showImageViewer("cal_89.png");
+	}
+	else if (object == s2l_book) {
+		showImageViewer("cal_plan_2.png"); //5614
+	}
+	else if (object == s2l_drawer) {
+		if (p_s2_left_drawer1 == true) {
+			showKeypad("5614", s2l_drawer);
+		}
+		else if (s2l1 == 1) {
+			showMessage("방 열쇠가 있던 자리. 서랍장 안에는 아무것도 없다.");
+		}
+		else {
+			showMessage("방 열쇠를 얻었다");
+			pickObject(key_s2r);
+			s2l1 = 1;
+		}
+	}
+	else if (object == s2l_bookcase) {
+		showMessage("체스에서 퀸(queen)은 가로, 세로, 대각선의 모든방향으로 \n 마음대로, 원하는 만큼 움직일 수 있다.");
+	}
+	//s2_right
+	else if (object == s2r_chess) {
+		enterScene(s2_right_chess);
+		stopSound(stage2_BGM);
+		playSound(chess_BGM, true);
+	}
+	else if (object == s2r_door) {
+		enterScene(mainhall);
+	}
+	else if (object == s2r_book_RU) {
+		showMessage("죄와 벌 \n 오만과 편견");
+	}
+	else if (object == s2r_book_RD) {
+		showMessage("위대한 개츠비");
+	}
+	else if (object == s2r_book_LU) {
+		showMessage("젊은 베르테르의 슬픔 \n 파리의 우울");
+	}
+	else if (object == s2r_book_LD) {
+		showMessage("사랑의 학교");
+	}
+	else if (object == s2r_paper) {
+		showMessage("노랑, 파랑, 초록, 빨강이 나타내는 책 제목의 글자수를 순서대로");
+	}
+	else if (object == s2r_drawer) {
+		if (p_s2_right_drawer1 == true) {
+			showKeypad("5596", s2r_drawer);
+		}
+		else if (s2r2 == 1) {
+			showMessage("방 열쇠가 있던자리. 서랍 안엔 아무것도 없다.");
+		}
+		else {
+			showMessage("방 열쇠를 얻었다");
+			pickObject(key_s3l);
+			s2r2 = 1;
+		}
+	}
+	//s2_right_chess
+	else if (object == chess_queen1) {
+
+		if (queen1X == 505) {
+			c -= 1;
+		}
+		else if (queen1X == 939) {
+			c += 1;
+			queen1X = 443, queen1Y = 357;
+			if (c == 8) {
+				if (s2r1 == 1) {
+				}
+				else {
+					pickObject(record_green);
+					showMessage("Clear! \n 초록색 레코드를 얻었다");
+					s2r1 = 1;
+				}
+			}
+		}
+		queen1X += 62;
+		queen1Y -= 7;
+		locateObject(chess_queen1, s2_right_chess, queen1X, queen1Y);
+	}
+	else if (object == chess_queen2) {
+
+		if (queen2X == 797) {
+			c += 1;
+			if (c == 8) {
+				if (s2r1 == 1) {
+				}
+				else {
+					pickObject(record_green);
+					showMessage("Clear! \n 초록색 레코드를 얻었다");
+					s2r1 = 1;
+				}
+			}
+		}
+		else if (queen2X == 859) {
+			c -= 1;
+		}
+		else if (queen2X == 921) {
+			queen2X = 425, queen2Y = 336;
+		}
+		queen2X += 62;
+		queen2Y -= 7;
+		locateObject(chess_queen2, s2_right_chess, queen2X, queen2Y);
+	}
+	else if (object == chess_queen3) {
+
+		if (queen3X == 657) {
+			c += 1;
+			if (c == 8) {
+				if (s2r1 == 1) {
+				}
+				else {
+					pickObject(record_green);
+					showMessage("Clear! \n 초록색 레코드를 얻었다");
+					s2r1 = 1;
+				}
+			}
+		}
+		else if (queen3X == 719) {
+			c -= 1;
+		}
+		else if (queen3X == 905) {
+			queen3X = 409, queen3Y = 315;
+		}
+		queen3X += 62;
+		queen3Y -= 7;
+		locateObject(chess_queen3, s2_right_chess, queen3X, queen3Y);
+	}
+	else if (object == chess_queen4) {
+
+		if (queen4X == 825) {
+			c += 1;
+			if (c == 8) {
+				if (s2r1 == 1) {
+				}
+				else {
+					pickObject(record_green);
+					showMessage("Clear! \n 초록색 레코드를 얻었다");
+					s2r1 = 1;
+				}
+			}
+		}
+		else if (queen4X == 887) {
+			c -= 1;
+			queen4X = 391, queen4Y = 290;
+		}
+		queen4X += 62;
+		queen4Y -= 7;
+		locateObject(chess_queen4, s2_right_chess, queen4X, queen4Y);
+	}
+	else if (object == chess_queen5) {
+
+		if (queen5X == 426) {
+			c += 1;
+			if (c == 8) {
+				if (s2r1 == 1) {
+				}
+				else {
+					pickObject(record_green);
+					showMessage("Clear! \n 초록색 레코드를 얻었다");
+					s2r1 = 1;
+				}
+			}
+		}
+		else if (queen5X == 490) {
+			c -= 1;
+		}
+		else if (queen5X == 874) {
+			queen5X = 362, queen5Y = 265;
+		}
+		queen5X += 64;
+		queen5Y -= 7;
+		locateObject(chess_queen5, s2_right_chess, queen5X, queen5Y);
+	}
+	else if (object == chess_queen6) {
+
+		if (queen6X == 532) {
+				c += 1;
+			if (c == 8) {
+				if (s2r1 == 1) {
+				}
+				else {
+					pickObject(record_green);
+					showMessage("Clear! \n 초록색 레코드를 얻었다");
+					s2r1 = 1;
+				}
+			}
+		}
+		else if (queen6X == 598) {
+			c -= 1;
+		}
+		else if (queen6X == 862) {
+			queen6X = 334, queen6Y = 240;
+		}
+		queen6X += 66;
+		queen6Y -= 7;
+		locateObject(chess_queen6, s2_right_chess, queen6X, queen6Y);
+	}
+	else if (object == chess_queen7) {
+
+		if (queen7X == 650) {
+			c += 1;
+			if (c == 8) {
+				if (s2r1 == 1) {
+				}
+				else {
+					pickObject(record_green);
+					showMessage("Clear! \n 초록색 레코드를 얻었다");
+					s2r1 = 1;
+				}
+			}
+		}
+		else if (queen7X == 719) {
+			c -= 1;
+		}
+		else if (queen7X == 857) {
+			queen7X = 305, queen7Y = 216;
+		}
+		queen7X += 69;
+		queen7Y -= 8;
+		locateObject(chess_queen7, s2_right_chess, queen7X, queen7Y);
+	}
+	else if (object == chess_queen8) {
+
+		if (queen8X == 418) {
+			c += 1;
+			if (c == 8) {
+				if (s2r1 == 1) {
+				}
+				else {
+					pickObject(record_green);
+					showMessage("Clear! \n 초록색 레코드를 얻었다");
+					s2r1 = 1;
+				}
+			}
+		}
+		else if (queen8X == 488) {
+			c -= 1;
+		}
+		else if (queen8X == 838) {
+			queen8X = 278, queen8Y = 192;
+		}
+		queen8X += 70;
+		queen8Y -= 9;
+		locateObject(chess_queen8, s2_right_chess, queen8X, queen8Y);
+	}
+	else if (object == s2r_chess_door) {
+		enterScene(s2_right);
+		stopSound(chess_BGM);
+		playSound(stage2_BGM, true);
+	}
+}
+
+
+void objectCallback(ObjectID object, EventID event)
+{
+	if (object == s1r_drawer2) {
+		if (event == EventID::EVENT_KEYPAD) {
+			p_s1_right_drawer2 = false;
+			showMessage("잠금 해제!!!");
+			//playSound
+		}
+	}
+	else if (object == s1r_drawer) {
+		if (event == EventID::EVENT_KEYPAD) {
+			p_s1_right_drawer1 = false;
+			showMessage("잠금 해제!!!");
+			//playSound
+		}
+	}
+	else if (object == s2l_drawer) {
+		if (event == EventID::EVENT_KEYPAD) {
+			p_s2_left_drawer1 = false;
+			showMessage("잠금 해제!!!");
+			//playSound
+		}
+	}
+	else if (object == s2r_drawer) {
+		if (event == EventID::EVENT_KEYPAD) {
+			p_s2_right_drawer1 = false;
+			showMessage("잠금 해제!!!");
+			//playSound
+		}
+	}
+}
+
+int main() {
+	setMouseCallback(mouseCallback);
+	setObjectCallback(objectCallback);
+	//setTimerCallback(timerCallback);
+
+	game_start();
+	object_create();	
+	sound_create();
+	playSound(start_BGM,true);
+	startGame(start);
+}
