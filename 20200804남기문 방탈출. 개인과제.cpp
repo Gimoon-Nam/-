@@ -66,7 +66,7 @@ void game_start() {
 	sprintf_s(s2_l, "오만의 좌측방");
 	sprintf_s(s2_r, "오만의 우측방");
 	sprintf_s(s3_l, "슬픔의 좌측방");*/
-	sprintf_s(s3_r, "진실의 방");
+	sprintf_s(s3_r, "Hidden - 제작자의 방");
 
 	//메인화면
 	start = createScene("Main Screen", "main.png");
@@ -117,15 +117,15 @@ void object_create() {
 	//s1_right
 	s1r_door = createObject("s1_right_door_982,435.png", s1_right, 982, 284, true);
 	s1r_picture = createObject("s1_right_picture_390,334.png", s1_right, 390, 385, true);
-	s1r_picture_changed = createObject("s1_right_picture_rasputin_390,334.png", s1_right, 390, 385, false);//대사: 1년을 월별로 구분하지말고 하나의 큰 줄기로 바라보고 계획을 짜.
+	s1r_picture_changed = createObject("s1_right_picture_rasputin_390,334.png", s1_right, 390, 385, false);
 	s1r_mirror = createObject("s1_right_mirror_78,441.png", s1_right, 78, 278, true);
-	s1r_candle = createObject("s1_right_candle_383,518.png", s1_right, 383, 201, true);//불끄도록
-	s1r_bone = createObject("s1_right_bone_26,677.png", s1_right, 26, 42, true);//상호대사
-	s1r_drawer = createObject("s1_right_drawer_185,602.png", s1_right, 185, 117, true);//잠겨있음-미니게임으로 열기
-	s1r_clock = createObject("s1_right_clock_222,326.png", s1_right, 222, 393, true);//미니게임
-	s1r_drawer2 = createObject("s1_right_drawer2_1090,685.png", s1_right, 1090, 34, true);//잠겨있음-비밀번호
-	s1r_book = createObject("s1_right_book_515,525.png", s1_right, 515, 194, true);//
-	s1r_paper1 = createObject("s1_right_paper1_593,659.png", s1_right, 593, 60, true);//종이1~3은 퀴즈-비번유추
+	s1r_candle = createObject("s1_right_candle_383,518.png", s1_right, 383, 201, true);
+	s1r_bone = createObject("s1_right_bone_26,677.png", s1_right, 26, 42, true);
+	s1r_drawer = createObject("s1_right_drawer_185,602.png", s1_right, 185, 117, true);
+	s1r_clock = createObject("s1_right_clock_222,326.png", s1_right, 222, 393, true);
+	s1r_drawer2 = createObject("s1_right_drawer2_1090,685.png", s1_right, 1090, 34, true);
+	s1r_book = createObject("s1_right_book_515,525.png", s1_right, 515, 194, true);
+	s1r_paper1 = createObject("s1_right_paper1_593,659.png", s1_right, 593, 60, true);
 	s1r_paper2 = createObject("s1_right_paper2_900,706.png", s1_right, 900, 13, true);
 	s1r_paper3 = createObject("s1_right_paper3_1008,711.png", s1_right, 1008, 8, true);
 	
@@ -711,7 +711,7 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 		showImageViewer("cal_89.png");
 	}
 	else if (object == s2l_book) {
-		showImageViewer("cal_plan_2.png"); //5614
+		showImageViewer("cal_plan_2.png"); 
 	}
 	else if (object == s2l_drawer) {
 		if (p_s2_left_drawer1 == true) {
@@ -1131,7 +1131,6 @@ void objectCallback(ObjectID object, EventID event)
 int main() {
 	setMouseCallback(mouseCallback);
 	setObjectCallback(objectCallback);
-	//setTimerCallback(timerCallback);
 
 	game_start();
 	object_create();	
