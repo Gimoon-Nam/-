@@ -1,11 +1,11 @@
 ﻿#include <stdio.h>
 #include <bangtal.h>
-SceneID start, mainhall, s1_right, s1_left, s2_left, s2_right, s2_right_chess;
+SceneID start, mainhall, s1_right, s1_left, s2_left, s2_right, s2_right_chess, s3_left, s3_right_hidden, ending1, ending2, ending3, ending4;
 ObjectID
 //start
 start_game, end_game,
 //main stage
-main_door_left, main_door_right, main_rd_2, main_record, main_book, main_fire, record_red, record_yellow, record_green, battery_record, key_s1l, key_s2r, key_s3l,
+main_door_left, main_door_right, main_rd_2, main_record, main_book, main_fire, record_red, record_yellow, record_green, battery_record, key_s1l, key_s2r, key_s3l, key_s3r, door_exit,
 //stage1 right
 s1r_door, s1r_picture, s1r_picture_changed, s1r_mirror, s1r_candle, s1r_bone, s1r_drawer, s1r_clock, s1r_drawer2, s1r_book, s1r_paper1, s1r_paper2, s1r_paper3,
 //stage1 left
@@ -15,7 +15,13 @@ s2l_door, s2l_clock, s2l_drawer, s2l_picture1, s2l_picture2, s2l_picture3, s2l_p
 //stage2 right
 s2r_door, s2r_book_RU, s2r_book_RD, s2r_book_LU, s2r_book_LD, s2r_drawer, s2r_paper, s2r_clock, s2r_chess,
 //stage2 right_chess
-s2r_chess_door, chess_queen1, chess_queen2, chess_queen3, chess_queen4, chess_queen5, chess_queen6, chess_queen7, chess_queen8
+s2r_chess_door, chess_queen1, chess_queen2, chess_queen3, chess_queen4, chess_queen5, chess_queen6, chess_queen7, chess_queen8,
+//stage3 left
+s3l_door, s3l_book, s3l_handle, s3l_room,
+//
+
+//Ending
+ending_1, ending1_exit, ending_2, ending2_exit, ending_3, ending3_exit, ending_4, ending4_exit
 ;
 SoundID start_BGM, stage1_BGM, stage2_BGM, chess_BGM, stage3_BGM,
 s1l_1, s1l_2, s1l_3, s1l_4, s1l_5, s1l_8;
@@ -24,7 +30,11 @@ bool record = false, door_s1_left = true, door_s2_right = true, door_s3_left = t
 s1_right_light = true, p_s1_right_drawer1 = true, p_s1_right_drawer2 = true,
 p_s1_left_sink = true,
 p_s2_left_drawer1 = true,
-p_s2_right_drawer1=true
+p_s2_right_drawer1 = true,
+p_s3_left_handle = true,
+s1_right_helper = true,
+//QUIZ
+s1rQ = true, s1lQ = true, s2lQ = true, s2rQ_chess = true, s2rQ_book = true, s2rQ_chess_clear = true, s2rQ_book_clear = true
 ;
 int
 queen1X = 505, queen1Y = 350,
@@ -45,18 +55,36 @@ ObjectID createObject(const char* image, SceneID scene, int x, int y, bool shown
 	return object;
 }
 
+char s1_r[20], s1_l[20], s2_r[20], s2_l[20], s3_r[20], s3_l[20];
+
 void game_start() {
+
+	/* HINT!!
+
+	sprintf_s(s1_l, "위대의 좌측방");
+	sprintf_s(s1_r, "위대의 우측방");
+	sprintf_s(s2_l, "오만의 좌측방");
+	sprintf_s(s2_r, "오만의 우측방");
+	sprintf_s(s3_l, "슬픔의 좌측방");*/
+	sprintf_s(s3_r, "진실의 방");
+
 	//메인화면
 	start = createScene("Main Screen", "main.png");
-
 	//메인홀
 	mainhall = createScene("mainhall", "stage all_main_1.png");
-	s1_right = createScene("", "stage1_right_1.png");
-	s1_left = createScene("", "stage1_left_1.png");
+	s1_right = createScene(s1_r, "stage1_right_1.png");
+	s1_left = createScene(s1_l, "stage1_left_1.png");
 	//stage2
-	s2_left = createScene("", "stage2_left_2.png");
-	s2_right = createScene("", "stage2_right_1.png");
+	s2_left = createScene(s2_l, "stage2_left_2.png");
+	s2_right = createScene(s2_r, "stage2_right_1.png");
 	s2_right_chess = createScene("", "s2_right_chess.png");
+	//stage3
+	s3_left = createScene(s3_l, "stage3_left_1.png");
+	s3_right_hidden = createScene(s3_r, "stage3_right_1.png");
+	//엔딩
+	ending1 = createScene("Ending 1", "stage_ending1.png");
+	ending2 = createScene("Ending 2", "stage_ending2.png");
+	ending3 = createScene("Ending3", "stage_ending3.png");
 }
 
 void object_create() {
@@ -71,13 +99,17 @@ void object_create() {
 	main_record = createObject("main_record_316,549.png", mainhall, 316, 170, true);
 	main_book = createObject("main_book_1002,577.png", mainhall, 1002, 142, true);
 	main_fire = createObject("main_fire_691,483.png", mainhall, 691, 236, true);
-	record_red = createObject("record_red.png", s1_right, 0, 0, false);
-	record_yellow = createObject("record_yellow.png", s1_right, 185, 117, false);
-	record_green = createObject("record_green.png", s1_right, 0, 0, false);
-	battery_record = createObject("battery_record.png", s1_right, 0, 0, false);
-	key_s1l = createObject("key.png", s1_right, 0, 0, false);
-	key_s2r = createObject("key.png", s1_right, 0, 0, false);
-	key_s3l = createObject("key.png", s1_right, 0, 0, false);
+	door_exit = createObject("door_back.png", mainhall, 590, 20, false);
+	scaleObject(door_exit, 0.8f);
+
+	//소지 아이템
+	record_red = createObject("record_red.png", start, 0, 0, false);
+	record_yellow = createObject("record_yellow.png", start, 0, 0, false);
+	record_green = createObject("record_green.png", start, 0, 0, false);
+	battery_record = createObject("battery_record.png", start, 0, 0, false);
+	key_s1l = createObject("key.png", start, 0, 0, false);
+	key_s2r = createObject("key.png", start, 0, 0, false);
+	key_s3l = createObject("key.png", start, 0, 0, false);
 
 	//s1_right
 	s1r_door = createObject("s1_right_door_982,435.png", s1_right, 982, 284, true);
@@ -142,16 +174,25 @@ void object_create() {
 	chess_queen7 = createObject("chess_queen.png", s2_right_chess, queen7X, queen7Y, true);
 	chess_queen8 = createObject("chess_queen.png", s2_right_chess, queen8X, queen8Y, true);
 
+	//s3_left
+	s3l_door = createObject("door_back.png", s3_left, 590, 20, true);
+	scaleObject(s3l_door, 0.8f);
+	s3l_book = createObject("s3_left_book_1010,372.png", s3_left, 1010, 347, true);
+	s3l_handle = createObject("s3_left_handle_20,696.png", s3_left, 20, 23, true);
+	s3l_room = createObject("s3_left_room_411,595.png", s3_left, 411, 124, true);
+
+	//Ending
+	ending_1 = createObject("ending_1_45,580.png", ending1, 45, 139, true);
+	ending1_exit = createObject("end.png", ending1, 590, 50, false);
+	ending_2 = createObject("ending_2_39,602.png", ending2, 39, 117, true);
+	ending2_exit = createObject("end.png", ending2, 590, 50, false);
+	ending_3 = createObject("ending_3_42,608.png", ending3, 43, 111, true);
+	ending3_exit = createObject("end.png", ending3, 590, 50, false);
 }
 /*
-227,250 책 우상단 오만과 편견
-233,374 책 우하단 위대한 개츠비
-14,207 책 좌상단
-15,414 책 좌하단
-909,556 금고
-616,429 종이
-1015,371 시계
-
+45,580 엔딩1
+39,602 엔딩2
+42,608 엔딩3
 */
 void sound_create() {
 	start_BGM = createSound("Intro.wav");
@@ -174,7 +215,7 @@ void sound_create() {
 	stage3_BGM = createSound("stage3_BGM.mp3");
 }
 
-int a = 0, b = 1, c = 1, s1r1 = 0, s1r2 = 0, s1l1 = 0, s2l1 = 0, s2r1 = 0, s2r2 = 0;
+int a = 0, b = 1, c = 1, s1r1 = 0, s1r2 = 0, s1l1 = 0, s2l1 = 0, s2r1 = 0, s2r2 = 0, hint = 0, hint_num = 0, exit_door = 0;
 
 void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 
@@ -245,7 +286,7 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 				}
 			}
 			else {
-				//enterScene(s3_left);
+				enterScene(s3_left);
 			}
 		}
 	}
@@ -328,6 +369,35 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 			showMessage("레코드판이 동작하지 않는것 같다");
 		}
 	}
+	else if (object == door_exit) {
+		if (exit_door == 1) {
+			if (b == 1) {
+				enterScene(ending1);
+			}
+			else {
+				showMessage("다른 스테이지의 문이야");
+			}
+		}
+		else if (exit_door == 2) {
+			if (b == 2) {
+				enterScene(ending2);
+			}
+			else {
+				showMessage("다른 스테이지의 문이야");
+			}
+		}
+		else if (exit_door == 3) {
+			if (b == 3) {
+				enterScene(ending3);
+			}
+			else {
+				showMessage("다른 스테이지의 문이야");
+			}
+		}
+		else if (exit_door == 4) {
+			enterScene(ending4);
+		}
+	}
 	//s1_right
 	else if (object == s1r_door) {
 		enterScene(mainhall);
@@ -336,23 +406,113 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 		s1_right_light = !s1_right_light;
 		if (s1_right_light == true) {
 			setSceneLight(s1_right, 1.0f);
-			hideObject(s1r_picture_changed);
-			showObject(s1r_picture);
+			if (s1_right_helper == true) {
+				hideObject(s1r_picture_changed);
+				showObject(s1r_picture);
+			}
 		}
 		else {
 			setSceneLight(s1_right, 0.2f);
-			hideObject(s1r_picture);
-			showObject(s1r_picture_changed);
+			if (s1_right_helper == true) {
+				hideObject(s1r_picture);
+				showObject(s1r_picture_changed);
+			}
 		}
 	}
 	else if (object == s1r_picture_changed) {
 		if (s1_right_light == false) {
-			showMessage("1년을 하나의 큰 줄기로 바라봐. \n꼭 기억해. 언젠간 널 도와줄지도 모르니.");
+			if (hint == 0) {
+				showMessage("필요할때 내게 찾아오면 도움을 줄게 \n 하지만 내게 너무 의지하진 마");
+				hint = 1;
+			}
+			else if (hint == 1) {
+				if (s1rQ == true) {
+					showMessage("방에 떨어진 3개의 종이와, \n mainhall의 책장의 힌트를 잘 생각해봐.");
+					hint_num += 1;
+					s1rQ = false;
+				}
+				else {
+					showMessage("방에 떨어진 3개의 종이와, \n mainhall의 책장의 힌트를 잘 생각해봐.");
+				}			
+			}
+			else if (hint == 2) {
+				if (s1lQ == true) {
+					showMessage("음계상에서 1은 '도'겠지? \n 오른쪽 위의 냄비가 '낮은 도' 소리를 낼거야");
+					hint_num += 1;
+					s1lQ = false;
+				}
+				else {
+					showMessage("음계상에서 1은 '도'겠지? \n 오른쪽 위의 냄비가 '낮은 도' 소리를 낼거야");
+				}
+			}
+			else if (hint == 3) {
+				if (s2lQ == true) {
+					showMessage("귀찮더라도 일정표에 있는 날짜들을 달력에 표시해보면 \n 무언가가 보이지 않을까?");
+					hint_num += 1;
+					s2lQ = false;
+				}
+				else {
+					showMessage("귀찮더라도 일정표에 있는 날짜들을 달력에 표시해보면 \n 무언가가 보이지 않을까?");
+				}
+			}
+			else if (hint == 4) {
+				if (s2rQ_chess == true) {
+					showMessage("이건 eight queens problem인데 \n 2층 왼쪽 방의 그림에서 퀸3개를 추가시켜서 \n 퀸들이 서로 공격하지 못하는 상태를 유지해봐");
+					hint_num += 1;
+					s2rQ_chess = false;
+				}
+				else {
+					showMessage("이건 eight queens problem인데 \n 2층 왼쪽 방의 그림에서 퀸3개를 추가시켜서 \n 퀸들이 서로 공격하지 못하는 상태를 유지해봐");
+				}
+			}
+			else if (hint == 5) {
+				if (s2rQ_chess_clear == false) {
+					if (s2rQ_book == true) {
+						showMessage("힌트는 이 방안에 있어. \n 노랑과 파랑의 중간은 과연 무슨 색일까?");
+						hint_num += 1;
+						s2rQ_book = false;
+					}
+					else {
+						showMessage("힌트는 이 방안에 있어. \n 노랑과 파랑의 중간은 과연 무슨 색일까?");
+					}
+				}
+				else if (s2rQ_book_clear == false) {
+					if (s2rQ_chess == true) {
+						showMessage("이건 eight queens problem인데 \n 2층 왼쪽 방의 그림에서 퀸3개를 추가시켜서 \n 퀸들이 서로 공격하지 못하는 상태를 유지해봐");
+						hint_num += 1;
+						s2rQ_chess = false;
+					}
+					else {
+						showMessage("이건 eight queens problem인데 \n 2층 왼쪽 방의 그림에서 퀸3개를 추가시켜서 \n 퀸들이 서로 공격하지 못하는 상태를 유지해봐");
+					}
+				}
+			}
+			else if (hint == 6) {
+				if (hint_num == 0) {
+					showMessage("여태까지 한번도 질문을 안하고 왔으니 이걸 줄게. \n 진실로 이끌어 줄거야.");
+					pickObject(key_s3r);
+				}
+				else {
+					showMessage("이게 마지막 퀴즈야 . . . \n '위대한시간'과 '슬픔의시간'을 더해. 슬픔의 색이 뭔지는 알지?");
+				}
+			}
+			else if (hint == 7) {
+				showMessage("수고했어. . .  나도 이제 갈게");
+				s1_right_light = true;
+				s1_right_helper = false;
+				hideObject(s1r_picture_changed);
+				showObject(s1r_picture);
+			}
 		}
 	}
 	else if (object == s1r_picture) {
 		if (s1_right_light == true) {
-			showMessage("나를 뚫어져라 쳐다보는 것 같다");
+			if (s1_right_helper == true) {
+				showMessage("나를 뚫어져라 쳐다보는 것 같다");
+			}
+			else {
+				showMessage("이제는 평범한 그림이 된 것 같다.");
+			}
 		}
 	}
 	else if (object == s1r_mirror) {
@@ -387,6 +547,7 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 			showMessage("노란색 레코드판을 얻었다");
 			pickObject(record_yellow);
 			s1r1 = 1;
+			hint = 2;
 		}
 	}
 	else if (object == s1r_paper1) {
@@ -404,6 +565,9 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 	else if (object == s1r_bone) {
 		showMessage("슬픔은 오만과 우울의 사이에 있으니..");
 	}
+	else if (object == s1r_clock) {
+		showMessage("'파란'시계바늘의 시계가 '10시 30분'을 나타내고 있다.");
+	}
 	//s1_left
 	else if (object == s1l_door) {
 		enterScene(mainhall);
@@ -419,7 +583,7 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 			showMessage("안에 건전지가 있다.");
 			pickObject(battery_record);
 			s1l1 = 1;
-			return;
+			hint = 3;
 		}
 	}
 	else if (object == s1l_play1) {
@@ -528,10 +692,14 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 			showMessage("방 열쇠를 얻었다");
 			pickObject(key_s2r);
 			s2l1 = 1;
+			hint = 4;
 		}
 	}
 	else if (object == s2l_bookcase) {
 		showMessage("체스에서 퀸(queen)은 가로, 세로, 대각선의 모든방향으로 \n 마음대로, 원하는 만큼 움직일 수 있다.");
+	}
+	else if (object == s2l_clock) {
+		showMessage("'파란'시계바늘의 시계가 '08시 40분'을 나타내고 있다.");
 	}
 	//s2_right
 	else if (object == s2r_chess) {
@@ -568,7 +736,12 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 			showMessage("방 열쇠를 얻었다");
 			pickObject(key_s3l);
 			s2r2 = 1;
+			hint += 1;
+			s2rQ_book_clear = false;
 		}
+	}
+	else if (object == s2r_clock) {
+		showMessage("'빨간'시계바늘의 시계가 '06시 30분'을 나타내고 있다.");
 	}
 	//s2_right_chess
 	else if (object == chess_queen1) {
@@ -586,6 +759,8 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 					pickObject(record_green);
 					showMessage("Clear! \n 초록색 레코드를 얻었다");
 					s2r1 = 1;
+					hint += 1;
+					s2rQ_chess_clear = false;
 				}
 			}
 		}
@@ -604,6 +779,8 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 					pickObject(record_green);
 					showMessage("Clear! \n 초록색 레코드를 얻었다");
 					s2r1 = 1;
+					hint += 1;
+					s2rQ_chess_clear = false;
 				}
 			}
 		}
@@ -628,6 +805,8 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 					pickObject(record_green);
 					showMessage("Clear! \n 초록색 레코드를 얻었다");
 					s2r1 = 1;
+					hint += 1;
+					s2rQ_chess_clear = false;
 				}
 			}
 		}
@@ -652,6 +831,8 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 					pickObject(record_green);
 					showMessage("Clear! \n 초록색 레코드를 얻었다");
 					s2r1 = 1;
+					hint += 1;
+					s2rQ_chess_clear = false;
 				}
 			}
 		}
@@ -674,6 +855,8 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 					pickObject(record_green);
 					showMessage("Clear! \n 초록색 레코드를 얻었다");
 					s2r1 = 1;
+					hint += 1;
+					s2rQ_chess_clear = false;
 				}
 			}
 		}
@@ -698,6 +881,8 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 					pickObject(record_green);
 					showMessage("Clear! \n 초록색 레코드를 얻었다");
 					s2r1 = 1;
+					hint += 1;
+					s2rQ_chess_clear = false;
 				}
 			}
 		}
@@ -722,6 +907,8 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 					pickObject(record_green);
 					showMessage("Clear! \n 초록색 레코드를 얻었다");
 					s2r1 = 1;
+					hint += 1;
+					s2rQ_chess_clear = false;
 				}
 			}
 		}
@@ -746,6 +933,8 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 					pickObject(record_green);
 					showMessage("Clear! \n 초록색 레코드를 얻었다");
 					s2r1 = 1;
+					hint += 1;
+					s2rQ_chess_clear = false;
 				}
 			}
 		}
@@ -763,6 +952,70 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 		enterScene(s2_right);
 		stopSound(chess_BGM);
 		playSound(stage2_BGM, true);
+	}
+	//s3_left
+	else if (object == s3l_door) {
+		enterScene(mainhall);
+	}
+	else if (object == s3l_book) {
+		showMessage("누군가의 도움을 받아라");	
+	}
+	else if (object == s3l_room) {
+		showMessage("적막감이 감도는 고요한 방이다 \n 이 방이 마지막인건가");
+	}
+	else if (object == s3l_handle) {
+		if (p_s3_left_handle == true) {
+			showKeypad("1605", s3l_handle);
+		}
+		else {
+			if (hint_num == 1 || hint_num==2) {
+				showMessage("'위대'의 문이 열렸다.");
+				exit_door = 1;
+				showObject(door_exit);
+			}
+			else if (hint_num ==3 || hint_num==4) {
+				showMessage("'오만'의 문이 열렸다.");
+				exit_door = 2;
+				showObject(door_exit);
+			}
+			else if (hint_num==5) {
+				showMessage("'슬픔'의 문이 열렸다.");
+				exit_door = 3;
+				showObject(door_exit);
+			}
+			else {
+				showMessage("이스터에그: 제작자의 방이 열렸습니다");
+			}
+			hint = 7;
+		}
+	}
+	//ending 1
+	else if (object == ending_1) {
+		char end1[20];
+		sprintf_s(end1, "힌트 %d회 사용", hint_num);
+		showMessage(end1);
+		showObject(ending1_exit);
+	}
+	else if (object == ending1_exit) {
+		endGame();
+	}
+	else if (object == ending_2) {
+		char end2[20];
+		sprintf_s(end2, "힌트 %d회 사용", hint_num);
+		showMessage(end2);
+		showObject(ending2_exit);
+		}
+	else if (object == ending2_exit) {
+		endGame();
+	}
+	else if (object == ending_3) {
+		char end3[20];
+		sprintf_s(end3, "힌트 %d회 사용", hint_num);
+		showMessage(end3);
+		showObject(ending3_exit);
+	}
+	else if (object == ending3_exit) {
+		endGame();
 	}
 }
 
@@ -793,6 +1046,13 @@ void objectCallback(ObjectID object, EventID event)
 	else if (object == s2r_drawer) {
 		if (event == EventID::EVENT_KEYPAD) {
 			p_s2_right_drawer1 = false;
+			showMessage("잠금 해제!!!");
+			//playSound
+		}
+	}
+	else if (object == s3l_handle) {
+		if (event == EventID::EVENT_KEYPAD) {
+			p_s3_left_handle = false;
 			showMessage("잠금 해제!!!");
 			//playSound
 		}
