@@ -5,7 +5,7 @@ ObjectID
 //start
 start_game, end_game,
 //main stage
-main_door_left, main_door_right, main_rd_2, main_record, main_book, main_fire, record_red, record_yellow, record_green, battery_record, key_s1l, key_s2r, key_s3l, key_s3r, door_exit,
+main_door_left, main_door_right, main_rd_2, main_record, main_book, main_fire, record_red, record_yellow, record_green, battery_record, key_s1l, key_s2r, key_s3l, key_s3r, door_exit, key_hidden,
 //stage1 right
 s1r_door, s1r_picture, s1r_picture_changed, s1r_mirror, s1r_candle, s1r_bone, s1r_drawer, s1r_clock, s1r_drawer2, s1r_book, s1r_paper1, s1r_paper2, s1r_paper3,
 //stage1 left
@@ -18,15 +18,15 @@ s2r_door, s2r_book_RU, s2r_book_RD, s2r_book_LU, s2r_book_LD, s2r_drawer, s2r_pa
 s2r_chess_door, chess_queen1, chess_queen2, chess_queen3, chess_queen4, chess_queen5, chess_queen6, chess_queen7, chess_queen8,
 //stage3 left
 s3l_door, s3l_book, s3l_handle, s3l_room,
-//
-
+//stage3 right
+s3r_door, s3r_book1, s3r_book2, s3r_book3, s3r_book4, s3r_book5, s3r_key,
 //Ending
 ending_1, ending1_exit, ending_2, ending2_exit, ending_3, ending3_exit, ending_4, ending4_exit
 ;
 SoundID start_BGM, stage1_BGM, stage2_BGM, chess_BGM, stage3_BGM,
 s1l_1, s1l_2, s1l_3, s1l_4, s1l_5, s1l_8;
 
-bool record = false, door_s1_left = true, door_s2_right = true, door_s3_left = true,
+bool record = false, door_s1_left = true, door_s2_right = true, door_s3_left = true, door_s3_right = true,
 s1_right_light = true, p_s1_right_drawer1 = true, p_s1_right_drawer2 = true,
 p_s1_left_sink = true,
 p_s2_left_drawer1 = true,
@@ -84,7 +84,8 @@ void game_start() {
 	//엔딩
 	ending1 = createScene("Ending 1", "stage_ending1.png");
 	ending2 = createScene("Ending 2", "stage_ending2.png");
-	ending3 = createScene("Ending3", "stage_ending3.png");
+	ending3 = createScene("Ending 3", "stage_ending3.png");
+	ending4 = createScene("Special Ending", "stage_ending4.png");
 }
 
 void object_create() {
@@ -110,6 +111,8 @@ void object_create() {
 	key_s1l = createObject("key.png", start, 0, 0, false);
 	key_s2r = createObject("key.png", start, 0, 0, false);
 	key_s3l = createObject("key.png", start, 0, 0, false);
+	key_s3r = createObject("key_s3r.png", start, 0, 0, false);
+	key_hidden = createObject("key_hidden.png", start, 0, 0, false);
 
 	//s1_right
 	s1r_door = createObject("s1_right_door_982,435.png", s1_right, 982, 284, true);
@@ -181,6 +184,16 @@ void object_create() {
 	s3l_handle = createObject("s3_left_handle_20,696.png", s3_left, 20, 23, true);
 	s3l_room = createObject("s3_left_room_411,595.png", s3_left, 411, 124, true);
 
+	//s3_right_hidden
+	s3r_door = createObject("door_back.png", s3_right_hidden, 590, 20, true);
+	scaleObject(s3r_door, 0.8f);
+	s3r_book1 = createObject("s3_right_book_1_238,291.png", s3_right_hidden, 238, 428, true);
+	s3r_book2 = createObject("s3_right_book_2_383,282.png", s3_right_hidden, 384, 437, true);
+	s3r_book3 = createObject("s3_right_book_3_515,280.png", s3_right_hidden, 515, 439, true);
+	s3r_book4 = createObject("s3_right_book_4_651,316.png", s3_right_hidden, 651, 403, true);
+	s3r_book5 = createObject("s3_right_book_5_851,551.png", s3_right_hidden, 851, 168, true);
+	s3r_key = createObject("s3_right_key_439,625.png", s3_right_hidden, 439, 94, true);
+
 	//Ending
 	ending_1 = createObject("ending_1_45,580.png", ending1, 45, 139, true);
 	ending1_exit = createObject("end.png", ending1, 590, 50, false);
@@ -188,12 +201,10 @@ void object_create() {
 	ending2_exit = createObject("end.png", ending2, 590, 50, false);
 	ending_3 = createObject("ending_3_42,608.png", ending3, 43, 111, true);
 	ending3_exit = createObject("end.png", ending3, 590, 50, false);
+	ending_4 = createObject("ending_4_37,599.png", ending4, 37, 120, true);
+	ending4_exit = createObject("end.png", ending4, 590, 50, false);
 }
-/*
-45,580 엔딩1
-39,602 엔딩2
-42,608 엔딩3
-*/
+
 void sound_create() {
 	start_BGM = createSound("Intro.wav");
 //s1_main
@@ -250,7 +261,20 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 			}
 		}
 		else if (b == 3) {
-			//enterScene(s3_right);
+			if (door_s3_right == true) {
+				if (getHandObject() == key_s3r) {
+					showMessage("문이 열렸다");
+					door_s3_right = false;
+					dropObject(key_s3r);
+					hideObject(key_s3r);
+				}
+				else {
+					showMessage("문이 잠겨있다");
+				}
+			}
+			else {
+				enterScene(s3_right_hidden);
+			}
 		}
 	}
 	else if (object == main_door_left) {
@@ -395,7 +419,15 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 			}
 		}
 		else if (exit_door == 4) {
-			enterScene(ending4);
+			if (getHandObject() == key_hidden) {
+				dropObject(key_hidden);
+				hideObject(key_hidden);
+				enterScene(ending4);
+			}
+			else {
+				showMessage("열쇠가 필요해");
+			}
+
 		}
 	}
 	//s1_right
@@ -489,7 +521,7 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 			}
 			else if (hint == 6) {
 				if (hint_num == 0) {
-					showMessage("여태까지 한번도 질문을 안하고 왔으니 이걸 줄게. \n 진실로 이끌어 줄거야.");
+					showMessage("여태까지 한번도 질문을 안하고 여기까지 왔으니 이걸 줄게.");
 					pickObject(key_s3r);
 				}
 				else {
@@ -985,10 +1017,40 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 			}
 			else {
 				showMessage("이스터에그: 제작자의 방이 열렸습니다");
+				exit_door = 4;
+				showObject(door_exit);
 			}
 			hint = 7;
 		}
 	}
+	//stage3_right_hidden
+	else if (object == s3r_door) {
+		enterScene(mainhall);
+	}
+	else if (object == s3r_key) {
+		pickObject(key_hidden);
+		showMessage("다르게 생긴 열쇠를 얻었다.");
+	}
+	else if (object == s3r_book5) {
+		showMessage("이 방은 마지막을 제외한 힌트의 도움을 \n하나도 받지 않았을 경우 들어올 수 있는 이스터 에그입니다. \n 플레이 해주셔서 정말 감사합니다.");
+	}
+	else if (object == s3r_book1) {
+		showMessage("이미지");
+		showImageViewer("s3_right_image1.png");
+	}
+	else if (object == s3r_book2) {
+		showMessage("음원");
+		showImageViewer("s3_right_image2.png");
+	}
+	else if (object == s3r_book3) {
+		showMessage("퀴즈");
+		showImageViewer("s3_right_image3.png");
+	}
+	else if (object == s3r_book4) {
+		showMessage("후기");
+		showImageViewer("s3_right_image4.png");
+	}
+
 	//ending 1
 	else if (object == ending_1) {
 		char end1[20];
@@ -1015,6 +1077,13 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 		showObject(ending3_exit);
 	}
 	else if (object == ending3_exit) {
+		endGame();
+	}
+	else if (object == ending_4) {
+		showMessage("플레이 해주셔서 감사합니다!!! \n 힌트를 한번도 안보셨다니, 대단하네요!");
+		showObject(ending4_exit);
+	}
+	else if (object == ending4_exit) {
 		endGame();
 	}
 }
