@@ -23,7 +23,7 @@ s3r_door, s3r_book1, s3r_book2, s3r_book3, s3r_book4, s3r_book5, s3r_key,
 //Ending
 ending_1, ending1_exit, ending_2, ending2_exit, ending_3, ending3_exit, ending_4, ending4_exit
 ;
-SoundID start_BGM, stage1_BGM, stage2_BGM, chess_BGM, stage3_BGM,
+SoundID start_BGM, stage1_BGM, stage2_BGM, chess_BGM, stage3_BGM, lock, door,
 s1l_1, s1l_2, s1l_3, s1l_4, s1l_5, s1l_8;
 
 bool record = false, door_s1_left = true, door_s2_right = true, door_s3_left = true, door_s3_right = true,
@@ -66,7 +66,7 @@ void game_start() {
 	sprintf_s(s2_l, "오만의 좌측방");
 	sprintf_s(s2_r, "오만의 우측방");
 	sprintf_s(s3_l, "슬픔의 좌측방");*/
-	sprintf_s(s3_r, "Hidden - 제작자의 방");
+	sprintf_s(s3_r, "제작자의 방");
 
 	//메인화면
 	start = createScene("Main Screen", "main.png");
@@ -207,6 +207,8 @@ void object_create() {
 
 void sound_create() {
 	start_BGM = createSound("Intro.wav");
+	lock = createSound("lock.mp3");
+	door = createSound("door.mp3");
 //s1_main
 	stage1_BGM = createSound("BGM.mp3");
 
@@ -247,6 +249,7 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 		else if (b == 2) {
 			if (door_s2_right == true) {
 				if (getHandObject() == key_s2r) {
+					playSound(door);
 					showMessage("문이 열렸다");
 					door_s2_right = false;
 					dropObject(key_s2r);
@@ -263,6 +266,7 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 		else if (b == 3) {
 			if (door_s3_right == true) {
 				if (getHandObject() == key_s3r) {
+					playSound(door);
 					showMessage("문이 열렸다");
 					door_s3_right = false;
 					dropObject(key_s3r);
@@ -281,6 +285,7 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 		if (b == 1) {
 			if (door_s1_left == true) {
 				if (getHandObject() == key_s1l) {
+					playSound(door);
 					showMessage("문이 열렸다");
 					door_s1_left = false;
 					dropObject(key_s1l);
@@ -300,6 +305,7 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 		else if (b == 3) {
 			if (door_s3_left == true) {
 				if (getHandObject() == key_s3l) {
+					playSound(door);
 					showMessage("문이 열렸다");
 					door_s3_left = false;
 					dropObject(key_s3l);
@@ -677,7 +683,7 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 		playSound(s1l_8);
 		if (a == 3) {
 			a += 1;
-			//playSound
+			//playSound(lock);
 			showMessage("무언가 열리는 소리가 들렸다");
 			p_s1_left_sink = false;
 		}
@@ -1094,36 +1100,36 @@ void objectCallback(ObjectID object, EventID event)
 	if (object == s1r_drawer2) {
 		if (event == EventID::EVENT_KEYPAD) {
 			p_s1_right_drawer2 = false;
-			showMessage("잠금 해제!!!");
-			//playSound
+			playSound(lock);
+			showMessage("잠금이 해제되었다!");
 		}
 	}
 	else if (object == s1r_drawer) {
 		if (event == EventID::EVENT_KEYPAD) {
 			p_s1_right_drawer1 = false;
-			showMessage("잠금 해제!!!");
-			//playSound
+			playSound(lock);
+			showMessage("잠금이 해제되었다!");
 		}
 	}
 	else if (object == s2l_drawer) {
 		if (event == EventID::EVENT_KEYPAD) {
 			p_s2_left_drawer1 = false;
-			showMessage("잠금 해제!!!");
-			//playSound
+			playSound(lock);
+			showMessage("잠금이 해제되었다!");
 		}
 	}
 	else if (object == s2r_drawer) {
 		if (event == EventID::EVENT_KEYPAD) {
 			p_s2_right_drawer1 = false;
-			showMessage("잠금 해제!!!");
-			//playSound
+			playSound(lock);
+			showMessage("잠금이 해제되었다!");
 		}
 	}
 	else if (object == s3l_handle) {
 		if (event == EventID::EVENT_KEYPAD) {
 			p_s3_left_handle = false;
-			showMessage("잠금 해제!!!");
-			//playSound
+			playSound(lock);
+			showMessage("스위치가 작동되었다!");
 		}
 	}
 }
