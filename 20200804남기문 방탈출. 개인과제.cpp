@@ -33,6 +33,7 @@ p_s2_left_drawer1 = true,
 p_s2_right_drawer1 = true,
 p_s3_left_handle = true,
 s1_right_helper = true,
+s3_left_quiz_hidden = true,
 //QUIZ
 s1rQ = true, s1lQ = true, s2lQ = true, s2rQ_chess = true, s2rQ_book = true, s2rQ_chess_clear = true, s2rQ_book_clear = true
 ;
@@ -529,6 +530,8 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 				if (hint_num == 0) {
 					showMessage("여태까지 한번도 질문을 안하고 여기까지 왔으니 이걸 줄게.");
 					pickObject(key_s3r);
+					s3_left_quiz_hidden = false;
+					hint = 7;
 				}
 				else {
 					showMessage("이게 마지막 퀴즈야 . . . \n '위대한시간'과 '슬픔의시간'을 더해. 슬픔의 색이 뭔지는 알지?");
@@ -1003,7 +1006,12 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 	}
 	else if (object == s3l_handle) {
 		if (p_s3_left_handle == true) {
-			showKeypad("1605", s3l_handle);
+			if (s3_left_quiz_hidden == false) {
+				showMessage("이스터에그: 제작자의 방이 열렸습니다");
+			}
+			else {
+				showKeypad("1605", s3l_handle);
+			}
 		}
 		else {
 			if (hint_num == 1 || hint_num==2) {
@@ -1035,8 +1043,9 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 	}
 	else if (object == s3r_key) {
 		pickObject(key_hidden);
-		exit_door = 4;
 		showMessage("다르게 생긴 열쇠를 얻었다.");
+		showObject(door_exit);
+		exit_door = 4;
 	}
 	else if (object == s3r_book5) {
 		showMessage("이 방은 마지막을 제외한 힌트의 도움을 \n하나도 받지 않았을 경우 들어올 수 있는 이스터 에그입니다. \n 플레이 해주셔서 정말 감사합니다.");
