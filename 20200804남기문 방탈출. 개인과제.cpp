@@ -737,7 +737,7 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 		showMessage("체스에서 퀸(queen)은 가로, 세로, 대각선의 모든방향으로 \n 마음대로, 원하는 만큼 움직일 수 있다.");
 	}
 	else if (object == s2l_clock) {
-		showMessage("'파란'시계바늘의 시계가 '08시 40분'을 나타내고 있다.");
+		showMessage("'노란'시계바늘의 시계가 '08시 40분'을 나타내고 있다.");
 	}
 	//s2_right
 	else if (object == s2r_chess) {
@@ -1035,6 +1035,7 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 	}
 	else if (object == s3r_key) {
 		pickObject(key_hidden);
+		exit_door = 4;
 		showMessage("다르게 생긴 열쇠를 얻었다.");
 	}
 	else if (object == s3r_book5) {
