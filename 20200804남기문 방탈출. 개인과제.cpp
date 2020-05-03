@@ -273,7 +273,7 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 					hideObject(key_s3r);
 				}
 				else {
-					showMessage("문이 잠겨있다");
+					showMessage("조건을 만족하지 못했다.");
 				}
 			}
 			else {
