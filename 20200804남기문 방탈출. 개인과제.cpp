@@ -298,6 +298,7 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 			}
 			else {
 				enterScene(s1_left);
+				stopSound(stage1_BGM);
 			}
 		}
 		else if (b == 2) {
@@ -612,6 +613,7 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 	//s1_left
 	else if (object == s1l_door) {
 		enterScene(mainhall);
+		playSound(stage1_BGM);
 	}
 	else if (object == s1l_sinkdrawer) {
 		if (p_s1_left_sink == true) {
